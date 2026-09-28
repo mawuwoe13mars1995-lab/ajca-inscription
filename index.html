@@ -1,0 +1,426 @@
+<title>Inscription AJCA</title>
+<style>
+  :root {
+    --ink: #14192c;
+    --ink-soft: #4a5170;
+    --paper: #faf7ef;
+    --surface: #ffffff;
+    --line: #e6dfd0;
+    --accent: #a97a1f;
+    --accent-deep: #7c5814;
+    --accent-tint: #f4e9d3;
+    --blue: #0f4c81;
+    --error: #ae2c22;
+    --error-tint: #fbeae8;
+    --success: #2f6f4f;
+    --success-tint: #e9f3ec;
+    --radius: 14px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #f1ead9;
+      --ink-soft: #b7bcd6;
+      --paper: #12172a;
+      --surface: #1b2338;
+      --line: #313b58;
+      --accent: #dcae54;
+      --accent-deep: #f0c369;
+      --accent-tint: #33291a;
+      --blue: #7db2e8;
+      --error: #ff8a80;
+      --error-tint: #3a2020;
+      --success: #7fcaa3;
+      --success-tint: #17301f;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #f1ead9;
+    --ink-soft: #b7bcd6;
+    --paper: #12172a;
+    --surface: #1b2338;
+    --line: #313b58;
+    --accent: #dcae54;
+    --accent-deep: #f0c369;
+    --accent-tint: #33291a;
+    --blue: #7db2e8;
+    --error: #ff8a80;
+    --error-tint: #3a2020;
+    --success: #7fcaa3;
+    --success-tint: #17301f;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    padding-inline: 16px;
+    padding-block: 32px;
+    display: flex;
+    justify-content: center;
+  }
+  .page { width: 100%; max-width: 640px; }
+
+  .display { font-family: "Fraunces", Georgia, serif; }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 28px 28px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::after {
+    content: "";
+    position: absolute;
+    left: 28px; right: 28px; bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-deep), var(--accent) 50%, var(--accent-deep));
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .masthead h1 {
+    font-size: clamp(26px, 6vw, 34px);
+    line-height: 1.15;
+    margin: 0 0 8px;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .masthead p {
+    margin: 0;
+    color: #d8d3c4;
+    font-size: 14.5px;
+    max-width: 46ch;
+  }
+
+  form {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 28px;
+  }
+
+  .section + .section { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .section h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  label .opt { font-weight: 400; font-style: italic; }
+  input, select {
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 10px 12px;
+    width: 100%;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-tint);
+  }
+  input::placeholder { color: var(--ink-soft); opacity: .55; }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%), linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%); background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 13px) calc(50% - 3px); background-size: 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
+
+  .hint { font-size: 12.5px; color: var(--ink-soft); margin: 4px 0 0; }
+  .errline { font-size: 12.5px; color: var(--error); margin: 4px 0 0; min-height: 15px; }
+
+  .submit-row { margin-top: 28px; }
+  button.primary {
+    width: 100%;
+    font: inherit;
+    font-weight: 600;
+    font-size: 15.5px;
+    letter-spacing: .01em;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+  }
+  button.primary { color: #201404; }
+  button.primary:active { transform: translateY(1px); }
+  button.primary:disabled { opacity: .6; cursor: default; }
+
+  .banner {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 9px;
+    padding: 12px 14px;
+    font-size: 13.5px;
+    margin-top: 16px;
+  }
+  .banner.show { display: flex; }
+  .banner.error { background: var(--error-tint); color: var(--error); }
+
+  .confirm {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 40px 28px;
+    text-align: center;
+  }
+  .confirm.show { display: block; }
+  .confirm .mark {
+    width: 52px; height: 52px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: var(--success-tint);
+    color: var(--success);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .confirm h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 22px;
+    margin: 0 0 8px;
+  }
+  .confirm p { color: var(--ink-soft); font-size: 14.5px; max-width: 40ch; margin: 0 auto; }
+  .confirm .ticket {
+    margin-top: 24px;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: left;
+  }
+  .confirm .ticket b { color: var(--ink); }
+  .again {
+    margin-top: 20px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13.5px;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 18px;
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .masthead, form, .confirm { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<div class="page">
+  <div class="masthead">
+    <p class="eyebrow">Association AJCA</p>
+    <h1 class="display">Registre d'adhésion</h1>
+    <p>Remplissez ce formulaire pour rejoindre le registre des membres. Deux minutes suffisent, depuis votre téléphone ou un ordinateur.</p>
+  </div>
+
+  <form id="form-inscription" novalidate>
+    <div class="section">
+      <h2>Identité</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="f-nom">Nom</label>
+          <input id="f-nom" name="nom" type="text" autocomplete="family-name" placeholder="KODJO" required>
+        </div>
+        <div class="field">
+          <label for="f-prenom">Prénom</label>
+          <input id="f-prenom" name="prenom" type="text" autocomplete="given-name" placeholder="Ama" required>
+        </div>
+        <div class="field">
+          <label for="f-genre">Genre</label>
+          <select id="f-genre" name="genre" required>
+            <option value="Masculin">Masculin</option>
+            <option value="Féminin">Féminin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-naissance">Date de naissance <span class="opt">(facultatif)</span></label>
+          <input id="f-naissance" name="date_naissance" type="date">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Contact &amp; profession</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="f-telephone">Téléphone</label>
+          <input id="f-telephone" name="telephone" type="tel" inputmode="tel" autocomplete="tel" placeholder="90 12 34 56" required>
+        </div>
+        <div class="field">
+          <label for="f-profession">Profession <span class="opt">(facultatif)</span></label>
+          <input id="f-profession" name="profession" type="text" placeholder="Enseignante">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Adhésion</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="f-statut">Statut</label>
+          <select id="f-statut" name="statut" required>
+            <option value="Membre actif">Membre actif</option>
+            <option value="Membre sympathisant">Membre sympathisant</option>
+            <option value="Membre d'honneur">Membre d'honneur</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-adhesion">Date d'adhésion</label>
+          <input id="f-adhesion" name="date_adhesion" type="date" required>
+          <p class="hint">La date à laquelle vous avez rejoint l'association — pas forcément aujourd'hui.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="primary" type="submit" id="btn-submit">S'inscrire</button>
+      <div class="errline" id="err-required"></div>
+      <div class="banner error" id="banner-error">
+        <span>⚠</span>
+        <span id="banner-error-text">Une erreur est survenue. Vérifiez votre connexion et réessayez.</span>
+      </div>
+    </div>
+  </form>
+
+  <div class="confirm" id="confirm">
+    <div class="mark">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2 class="display">Inscription enregistrée</h2>
+    <p>Votre demande a bien été transmise à l'association. Elle sera vérifiée puis intégrée au registre officiel des membres.</p>
+    <div class="ticket" id="ticket"></div>
+    <button class="again" id="btn-again" type="button">Inscrire quelqu'un d'autre</button>
+  </div>
+
+  <footer>Association AJCA · Registre des membres</footer>
+</div>
+
+<script>
+(function () {
+  var SUPABASE_URL = "https://xvdzrobemsgwgqrzcqlc.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_t1mKfCBM3OLS8Nfvf3CuUQ_JpX3M5qw";
+  var ENDPOINT = SUPABASE_URL + "/rest/v1/inscriptions_membres";
+
+  var form = document.getElementById("form-inscription");
+  var confirmPanel = document.getElementById("confirm");
+  var btn = document.getElementById("btn-submit");
+  var errRequired = document.getElementById("err-required");
+  var bannerError = document.getElementById("banner-error");
+  var bannerErrorText = document.getElementById("banner-error-text");
+  var ticket = document.getElementById("ticket");
+  var btnAgain = document.getElementById("btn-again");
+
+  function todayISO() {
+    var d = new Date();
+    var mm = String(d.getMonth() + 1).padStart(2, "0");
+    var jj = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + mm + "-" + jj;
+  }
+  document.getElementById("f-adhesion").value = todayISO();
+
+  function setLoading(loading) {
+    btn.disabled = loading;
+    btn.textContent = loading ? "Envoi en cours…" : "S'inscrire";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    errRequired.textContent = "";
+    bannerError.classList.remove("show");
+
+    var data = {
+      nom: form.nom.value.trim(),
+      prenom: form.prenom.value.trim(),
+      genre: form.genre.value,
+      telephone: form.telephone.value.trim(),
+      profession: form.profession.value.trim(),
+      date_naissance: form.date_naissance.value || null,
+      statut: form.statut.value,
+      date_adhesion: form.date_adhesion.value
+    };
+
+    if (!data.nom || !data.prenom || !data.telephone || !data.date_adhesion) {
+      errRequired.textContent = "Merci de renseigner au minimum le nom, le prénom, le téléphone et la date d'adhésion.";
+      return;
+    }
+
+    setLoading(true);
+
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(data)
+    }).then(function (res) {
+      setLoading(false);
+      if (!res.ok) {
+        bannerErrorText.textContent = "L'inscription n'a pas pu être envoyée (code " + res.status + "). Vérifiez votre connexion et réessayez.";
+        bannerError.classList.add("show");
+        return;
+      }
+      ticket.innerHTML =
+        "<b>" + data.prenom + " " + data.nom + "</b><br>" +
+        data.statut + " — depuis le " + data.date_adhesion;
+      form.style.display = "none";
+      confirmPanel.classList.add("show");
+    }).catch(function () {
+      setLoading(false);
+      bannerErrorText.textContent = "Impossible de joindre le serveur. Vérifiez votre connexion internet et réessayez.";
+      bannerError.classList.add("show");
+    });
+  });
+
+  btnAgain.addEventListener("click", function () {
+    form.reset();
+    document.getElementById("f-adhesion").value = todayISO();
+    form.style.display = "";
+    confirmPanel.classList.remove("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+</script>
