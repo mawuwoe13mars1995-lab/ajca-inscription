@@ -1,4 +1,9 @@
-<title>Inscription AJCA</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inscription — ASSOGEST</title>
 <style>
   :root {
     --ink: #14192c;
@@ -246,12 +251,19 @@
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+</head>
+<body>
 
 <div class="page">
   <div class="masthead">
-    <p class="eyebrow">Association AJCA</p>
-    <h1 class="display">Registre d'adhésion</h1>
-    <p>Remplissez ce formulaire pour rejoindre le registre des membres. Deux minutes suffisent, depuis votre téléphone ou un ordinateur.</p>
+    <p class="eyebrow" id="eyebrow">ASSOGEST · Inscription en ligne</p>
+    <h1 class="display" id="titre-principal">Registre d'adhésion</h1>
+    <p id="texte-intro">Remplissez ce formulaire pour rejoindre le registre des membres. Deux minutes suffisent, depuis votre téléphone ou un ordinateur.</p>
+  </div>
+
+  <div class="banner error" id="lien-invalide" style="border-radius:0 0 var(--radius) var(--radius); margin-top:0;">
+    <span>⚠</span>
+    <span>Ce lien d'inscription est incomplet ou invalide. Merci de redemander le lien correct à votre association.</span>
   </div>
 
   <form id="form-inscription" novalidate>
@@ -333,13 +345,59 @@
     <button class="again" id="btn-again" type="button">Inscrire quelqu'un d'autre</button>
   </div>
 
-  <footer>Association AJCA · Registre des membres</footer>
+  <footer>Propulsé par ASSOGEST — Logiciel de gestion des associations</footer>
 </div>
 
 <script>
 (function () {
-  var SUPABASE_URL = "https://xvdzrobemsgwgqrzcqlc.supabase.co";
-  var SUPABASE_KEY = "sb_publishable_t1mKfCBM3OLS8Nfvf3CuUQ_JpX3M5qw";
+  // --- Décodage de la configuration glissée dans le lien (après le '#') ---
+  // Chaque association a son propre lien : ...#u=<url encodée>&k=<clé encodée>&n=<nom encodé>
+  // Cette page est la MÊME pour tout le monde ; seul ce qui suit le '#' change
+  // (et n'est jamais envoyé à un serveur, contrairement à ce qui suit un '?').
+  function decoderBase64Url(valeur) {
+    try {
+      var s = valeur.replace(/-/g, "+").replace(/_/g, "/");
+      while (s.length % 4 !== 0) { s += "="; }
+      return decodeURIComponent(escape(window.atob(s)));
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function lireConfigDepuisLien() {
+    var hash = window.location.hash.replace(/^#/, "");
+    var params = {};
+    hash.split("&").forEach(function (paire) {
+      if (!paire) return;
+      var idx = paire.indexOf("=");
+      if (idx === -1) return;
+      var cle = paire.slice(0, idx);
+      var val = paire.slice(idx + 1);
+      params[cle] = decoderBase64Url(val);
+    });
+    return {
+      url: (params.u || "").replace(/\/+$/, ""),
+      cle: params.k || "",
+      nom: params.n || ""
+    };
+  }
+
+  var config = lireConfigDepuisLien();
+  var SUPABASE_URL = config.url;
+  var SUPABASE_KEY = config.cle;
+
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    document.getElementById("lien-invalide").classList.add("show");
+    document.getElementById("form-inscription").style.display = "none";
+    return; // On s'arrête ici : pas de config, pas de formulaire fonctionnel.
+  }
+
+  if (config.nom) {
+    document.getElementById("eyebrow").textContent = "ASSOGEST · " + config.nom;
+    document.getElementById("texte-intro").textContent =
+      "Rejoignez " + config.nom + " en remplissant ce formulaire. Deux minutes suffisent, depuis votre téléphone ou un ordinateur.";
+  }
+
   var ENDPOINT = SUPABASE_URL + "/rest/v1/inscriptions_membres";
 
   var form = document.getElementById("form-inscription");
@@ -424,3 +482,5 @@
   });
 })();
 </script>
+</body>
+</html>
